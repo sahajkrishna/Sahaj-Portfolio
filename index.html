@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Sahaj | AI Builder & Product Strategist</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-base: #0a0a0c;
+            --bg-surface: #121215;
+            --bg-elevated: #1a1a1e;
+            --text-primary: #f4f4f5;
+            --text-muted: #8a8a93;
+            --accent: #00e5ff;
+            --accent-glow: rgba(0, 229, 255, 0.15);
+            --border-subtle: #27272a;
+            
+            --font-display: 'DM Serif Display', serif;
+            --font-body: 'IBM Plex Mono', monospace;
+            
+            --nav-height: 90px;
+            --section-padding: 8rem 2rem;
+            --container-width: 1200px;
+            
+            --transition-smooth: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .noise {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999;
+            opacity: 0.035;
+            background: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noise)"/%3E%3C/svg%3E');
+        }
+
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        section {
+            padding: var(--section-padding);
+            position: relative;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+        a:hover { color: var(--accent); }
+
+        h1, h2, h3, h4, .display-text {
+            font-family: var(--font-display);
+            font-weight: 400;
+            line-height: 1.1;
+        }
+
+        .section-header {
+            margin-bottom: 5rem;
+            position: relative;
+            display: inline-block;
+        }
+        .section-header h2 { font-size: clamp(2.5rem, 5vw, 4rem); }
+        .section-header::after {
+            content: ''; position: absolute; bottom: -10px; left: 0;
+            width: 40px; height: 2px;
+            background: var(--accent);
+            transition: width var(--transition-smooth);
+        }
+        .section-header:hover::after { width: 100%; }
+
+        .cta-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-smooth);
+        }
+        .cta-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--accent); transform: translateX(-101%);
+            transition: transform var(--transition-smooth); z-index: -1;
+        }
+        .cta-btn:hover { color: var(--bg-base); }
+        .cta-btn:hover::before { transform: translateX(0); }
+
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            height: var(--nav-height);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 3rem; z-index: 1000;
+            transition: all var(--transition-smooth);
+        }
+        nav.scrolled {
+            background: rgba(10, 10, 12, 0.85); backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle); height: 70px;
+        }
+        .logo { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: 1px; color: var(--text-primary); }
+        .nav-links { display: flex; gap: 3rem; }
+        .nav-links a { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; position: relative; }
+        .nav-links a::after {
+            content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 1px;
+            background: var(--accent); transition: width var(--transition-fast);
+        }
+        .nav-links a:hover::after { width: 100%; }
+        
+        .menu-toggle {
+            display: none; flex-direction: column; gap: 6px;
+            background: none; border: none; cursor: pointer; z-index: 1001;
+        }
+        .menu-toggle span { width: 30px; height: 1px; background: var(--text-primary); transition: all 0.3s; }
+
+        .hero { height: 100vh; display: flex; align-items: center; padding: 0 3rem; position: relative; overflow: hidden; }
+        .hero-bg-grid {
+            position: absolute; top: 0; right: -10vw; width: 60vw; height: 100vh;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 4dvh 4dvh; opacity: 0.5;
+            mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 10%, transparent 70%); z-index: 0;
+        }
+        .hero-content { position: relative; z-index: 10; max-width: 900px; margin-top: -5vh; }
+        .hero-pretitle { color: var(--accent); font-size: 0.85rem; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 2rem; display: block; opacity: 0; transform: translateY(20px); animation: staggerUp var(--transition-smooth) 0.2s forwards; }
+        .hero-title { font-size: clamp(4rem, 8vw, 7rem); margin-bottom: 1rem; letter-spacing: -2px; opacity: 0; transform: translateY(20px); animation: staggerUp var(--transition-smooth) 0.4s forwards; }
+        .hero-roles { font-size: clamp(1rem, 2vw, 1.5rem); color: var(--text-muted); height: 2.2em; overflow: hidden; position: relative; opacity: 0; transform: translateY(20px); animation: staggerUp var(--transition-smooth) 0.6s forwards; }
+        .roles-cycler { display: flex; flex-direction: column; animation: cycleText 9s infinite cubic-bezier(0.64, 0, 0.35, 1); }
+        .roles-cycler span { height: 2.2em; line-height: 2.2em; }
+        
+        @keyframes cycleText {
+            0%, 25% { transform: translateY(0); }
+            33%, 58% { transform: translateY(-2.2em); }
+            66%, 91% { transform: translateY(-4.4em); }
+            100% { transform: translateY(0); }
+        }
+        .hero-cta { margin-top: 4rem; opacity: 0; transform: translateY(20px); animation: staggerUp var(--transition-smooth) 0.8s forwards; }
+
+        .about-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+        .bio { font-size: 1.125rem; color: var(--text-muted); }
+        .bio p { margin-bottom: 2rem; }
+        .bio span.highlight { color: var(--text-primary); }
+        .bio span.accent { color: var(--accent); }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .stat-card {
+            background: var(--bg-surface); padding: 2.5rem;
+            border: 1px solid var(--border-subtle); border-left: 2px solid var(--accent);
+            transition: transform var(--transition-smooth), background var(--transition-fast);
+        }
+        .stat-card:hover { transform: translateY(-8px); background: var(--bg-elevated); }
+        .stat-num { font-family: var(--font-display); font-size: 3.5rem; line-height: 1; margin-bottom: 0.5rem; color: var(--text-primary); }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); }
+
+        .skills-filter { margin-bottom: 3rem; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; }
+        .chip-group { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; }
+        .chip {
+            padding: 0.8rem 1.5rem; background: var(--bg-surface); border: 1px solid var(--border-subtle);
+            border-radius: 40px; font-size: 0.85rem; color: var(--text-muted); cursor: default;
+            transition: all var(--transition-fast); display: inline-flex; align-items: center; gap: 10px;
+        }
+        .chip::before {
+            content: ''; width: 6px; height: 6px; border-radius: 50%;
+            background: var(--text-muted); transition: background var(--transition-fast), box-shadow var(--transition-fast);
+        }
+        .chip:hover {
+            color: var(--text-primary); border-color: var(--accent); transform: translateY(-4px); background: var(--bg-elevated);
+        }
+        .chip:hover::before { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2.5rem; }
+        .project-card {
+            background: var(--bg-surface); border: 1px solid var(--border-subtle); height: 420px;
+            padding: 3rem; display: flex; flex-direction: column; position: relative; overflow: hidden;
+            transition: all var(--transition-smooth); cursor: pointer;
+        }
+        .project-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 100% 100%, var(--accent-glow), transparent 60%);
+            opacity: 0; transition: opacity var(--transition-smooth); pointer-events: none;
+        }
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.01); border-color: rgba(0, 229, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        .project-card:hover::before { opacity: 1; }
+        .project-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; }
+        .project-title { font-size: 2rem; color: var(--text-primary); }
+        .project-icon {
+            color: var(--accent); font-size: 1.5rem; opacity: 0;
+            transform: translate(-10px, 10px); transition: all var(--transition-smooth);
+        }
+        .project-card:hover .project-icon { opacity: 1; transform: translate(0, 0); }
+        .project-desc { color: var(--text-muted); font-size: 0.95rem; flex-grow: 1; }
+        .project-tech { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+        .tech-tag { font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase; padding: 0.3rem 0.6rem; background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .project-reveal {
+            position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem 3rem;
+            background: var(--accent); color: var(--bg-base); font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center;
+            transform: translateY(100%); transition: transform var(--transition-smooth);
+        }
+        .project-card:hover .project-reveal { transform: translateY(0); }
+
+        .timeline-container { position: relative; max-width: 900px; }
+        .timeline-track { position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: var(--border-subtle); }
+        .timeline-progress { position: absolute; left: 0; top: 0; width: 1px; background: var(--accent); height: 0%; }
+        .timeline-node { position: relative; padding-left: 5rem; margin-bottom: 4rem; }
+        .timeline-node:last-child { margin-bottom: 0; }
+        .timeline-point { position: absolute; left: -4px; top: 0; width: 9px; height: 9px; background: var(--bg-base); border: 1px solid var(--text-muted); transition: all var(--transition-fast); }
+        .timeline-node:hover .timeline-point { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .timeline-date { display: block; color: var(--accent); font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 1rem; }
+        .timeline-role { font-size: 1.75rem; margin-bottom: 0.5rem; }
+        .timeline-company { color: var(--text-primary); font-style: italic; margin-bottom: 1.5rem; opacity: 0.7; }
+        .timeline-details { list-style: none; color: var(--text-muted); }
+        .timeline-details li { margin-bottom: 0.75rem; position: relative; padding-left: 1.5rem; }
+        .timeline-details li::before { content: '—'; position: absolute; left: 0; color: var(--text-muted); opacity: 0.5; }
+
+        .contact-section { text-align: center; border-top: 1px solid var(--border-subtle); padding: 10rem 2rem; background: var(--bg-surface); }
+        .contact-section h2 { font-size: clamp(3rem, 6vw, 5rem); margin-bottom: 2rem; }
+        .social-links { display: flex; justify-content: center; gap: 3rem; margin-top: 5rem; }
+        .social-link { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; position: relative; }
+        .social-link::after { content: ''; position: absolute; left: 0; bottom: -6px; height: 1px; width: 100%; background: var(--border-subtle); transition: all var(--transition-fast); opacity: 0; }
+        .social-link:hover::after { background: var(--accent); opacity: 1; }
+
+        footer { padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; background: var(--bg-base); }
+
+        .observe-reveal { opacity: 0; transform: translateY(40px); transition: opacity var(--transition-smooth), transform var(--transition-smooth); }
+        .observe-reveal.in-view { opacity: 1; transform: translateY(0); }
+        @keyframes staggerUp { to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1024px) {
+            .about-wrap { grid-template-columns: 1fr; gap: 4rem; }
+        }
+        @media (max-width: 768px) {
+            :root { --section-padding: 5rem 1.5rem; }
+            nav { padding: 0 1.5rem; }
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: absolute; top: var(--nav-height); left: 0; width: 100%;
+                background: var(--bg-elevated); flex-direction: column; align-items: center;
+                gap: 2rem; padding: 3rem 0; transform: translateY(-150%); opacity: 0;
+                border-bottom: 1px solid var(--border-subtle); pointer-events: none;
+                transition: transform var(--transition-smooth), opacity var(--transition-smooth);
+            }
+            .nav-links.nav-open { transform: translateY(0); opacity: 1; pointer-events: all; }
+            .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .menu-toggle.open span:nth-child(2) { opacity: 0; }
+            .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+            .hero-title { font-size: 3.5rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .stat-grid { grid-template-columns: 1fr 1fr; }
+            .social-links { flex-direction: column; gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="noise"></div>
+
+    <nav id="navbar">
+        <a href="#" class="logo">K/S.</a>
+        <div class="nav-links" id="navLinks">
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Work</a>
+            <a href="#experience">Experience</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <button class="menu-toggle" id="menuBtn">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-content">
+            <span class="hero-pretitle">System Ready // Init Profile</span>
+            <h1 class="hero-title">Krishna Sahaj</h1>
+            <div class="hero-roles">
+                <div class="roles-cycler">
+                    <span>AI Builder & No-Code Dev</span>
+                    <span>Product UI Strategist</span>
+                    <span>Generative AI Enthusiast</span>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <a href="#projects" class="cta-btn">View Deployed Nodes</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container about-wrap">
+            <div class="bio observe-reveal">
+                <div class="section-header">
+                    <h2>Neural Imprint</h2>
+                </div>
+                <p>I am an MBA graduate and self-taught <span class="highlight">Generative AI builder</span> with a proven track record of shipping live AI-powered products. I merge a strong business foundation with hands-on technical execution using no-code and AI-assisted development paradigms.</p>
+                <p>Equipped with 4+ years of active intraday trading experience in <span class="highlight">Forex and Indian equities</span>, I bring a sharp analytical edge—bridging domain expertise with product intuition to solve real-world computational friction.</p>
+                <p>My focus lies in building scalable architectures, integrating sophisticated <span class="accent">RAG pipelines</span>, and deploying fluid, high-conversion user interfaces.</p>
+            </div>
+            <div class="stat-grid observe-reveal">
+                <div class="stat-card">
+                    <div class="stat-num">3+</div>
+                    <div class="stat-label">Live AI Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num">4y</div>
+                    <div class="stat-label">Market Trading</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num">MBA</div>
+                    <div class="stat-label">Business Logic</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num">∞</div>
+                    <div class="stat-label">Generative Iteration</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="container">
+        <div class="section-header observe-reveal">
+            <h2>Tech Matrix</h2>
+        </div>
+        
+        <div class="skills-filter observe-reveal">Core Architecture & Logic</div>
+        <div class="chip-group observe-reveal">
+            <div class="chip">Lovable AI</div>
+            <div class="chip">Supabase</div>
+            <div class="chip">n8n Automation</div>
+            <div class="chip">Claude API</div>
+            <div class="chip">RAG Architecture</div>
+            <div class="chip">Hugging Face</div>
+            <div class="chip">Vercel</div>
+        </div>
+
+        <div class="skills-filter observe-reveal">Generative Synthesis</div>
+        <div class="chip-group observe-reveal">
+            <div class="chip">ComfyUI</div>
+            <div class="chip">Higgsfield AI</div>
+            <div class="chip">Freepik GenAI</div>
+            <div class="chip">Google Flow</div>
+            <div class="chip">Video GenAI</div>
+        </div>
+
+        <div class="skills-filter observe-reveal">Product & Market Mechanics</div>
+        <div class="chip-group observe-reveal" style="margin-bottom:0;">
+            <div class="chip">Product Strategy</div>
+            <div class="chip">PRD writing</div>
+            <div class="chip">MVP Scoping</div>
+            <div class="chip">Forex (XAUUSD) Analysis</div>
+            <div class="chip">Global Trading Sessions</div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="container">
+            <div class="section-header observe-reveal">
+                <h2>Deployed Nodes</h2>
+            </div>
+            
+            <div class="projects-grid">
+                
+                <div class="project-card observe-reveal" onclick="window.open('https://fitcore-theta.vercel.app/', '_blank')">
+                    <div class="project-header">
+                        <h3 class="project-title">CoreFit Path</h3>
+                        <div class="project-icon">↗</div>
+                    </div>
+                    <p class="project-desc">A fully functional AI-powered fitness platform replacing static templates with dynamic engine models. Personalizes workouts and adapts dynamically to real-time user metrics.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Lovable</span>
+                        <span class="tech-tag">Vercel AI</span>
+                        <span class="tech-tag">React</span>
+                    </div>
+                    <div class="project-reveal">
+                        <span>Live Protocol</span>
+                        <span>Initialize →</span>
+                    </div>
+                </div>
+
+                <div class="project-card observe-reveal" onclick="window.open('https://team-finder-ai.preview.emergentagent.com/', '_blank')">
+                    <div class="project-header">
+                        <h3 class="project-title">Team Finder AI</h3>
+                        <div class="project-icon">↗</div>
+                    </div>
+                    <p class="project-desc">An intelligent matching platform connecting users to compatible project teams utilizing skill-based and interest-based mapping architecture.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Emergent Agent</span>
+                        <span class="tech-tag">AI Matching Logic</span>
+                        <span class="tech-tag">Data Schema</span>
+                    </div>
+                    <div class="project-reveal">
+                        <span>Live Protocol</span>
+                        <span>Initialize →</span>
+                    </div>
+                </div>
+
+                <div class="project-card observe-reveal" onclick="window.open('https://market-clock.lovable.app/dashboard', '_blank')">
+                    <div class="project-header">
+                        <h3 class="project-title">Market Clock</h3>
+                        <div class="project-icon">↗</div>
+                    </div>
+                    <p class="project-desc">Real-time timezone-aware dashboard. Provides instant spatial awareness of global market sessions (Forex, NYSE, LSE, Tokyo) and liquidity windows.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Lovable AI</span>
+                        <span class="tech-tag">Timezone APIs</span>
+                        <span class="tech-tag">Finance Domain</span>
+                    </div>
+                    <div class="project-reveal">
+                        <span>Live Protocol</span>
+                        <span>Initialize →</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="container">
+        <div class="section-header observe-reveal">
+            <h2>Timeline Protocol</h2>
+        </div>
+        
+        <div class="timeline-container observe-reveal" id="timeline">
+            <div class="timeline-track"></div>
+            <div class="timeline-progress" id="timelineProg"></div>
+            
+            <div class="timeline-node">
+                <div class="timeline-point"></div>
+                <span class="timeline-date">2021 — PRESENT</span>
+                <h3 class="timeline-role">Intraday Trader</h3>
+                <div class="timeline-company">Forex & Indian Markets | Hyderabad</div>
+                <ul class="timeline-details">
+                    <li>Specialized in Forex trading focusing on XAUUSD, applying structural technical analysis, liquidity concepts, and high-probability execution logic.</li>
+                    <li>Developed strict quantitative risk management rules and disciplined capital allocation algorithms.</li>
+                    <li>Mapped deep contextual understanding of global market sessions driving product thesis for financial instruments.</li>
+                </ul>
+            </div>
+
+            <div class="timeline-node">
+                <div class="timeline-point"></div>
+                <span class="timeline-date">GRADUATED 2023</span>
+                <h3 class="timeline-role">Master of Business Administration</h3>
+                <div class="timeline-company">O.P. Jindal Global University</div>
+                <ul class="timeline-details">
+                    <li>Percentage achieved: 73%. Formulated core business logic, strategy, and organizational structuring.</li>
+                    <li>Developed the foundational analytical frameworks currently applied to MVP scoping and product development lifecycles.</li>
+                </ul>
+            </div>
+            
+        </div>
+    </section>
+
+    <section id="contact" class="contact-section observe-reveal">
+        <div class="container">
+            <h2>Initialize Contact</h2>
+            <p style="color: var(--text-muted); margin-bottom: 3rem; max-width: 500px; margin-inline: auto;">
+                Looking to build the next iteration of intelligent web products? Let's engineer something exceptional together.
+            </p>
+            <a href="mailto:sahajkrishna097@gmail.com" class="cta-btn">Transmit Message</a>
+            
+            <div class="social-links">
+                <a href="https://www.linkedin.com/in/krishna-sahaj-d-v-7b623b190" class="social-link" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="#" class="social-link">GitHub</a>
+                <a href="tel:+919177611933" class="social-link">+91 9177611933</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            &copy; 2024 Krishna Sahaj D V. All Logic Reserved. Operating from Hyderabad, India.
+        </div>
+    </footer>
+
+    <script>
+        // Hamburger Menu Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('open');
+            navLinks.classList.toggle('nav-open');
+        });
+
+        navLinks.addEventListener('click', () => {
+            if(window.innerWidth <= 768) {
+                menuBtn.classList.remove('open');
+                navLinks.classList.remove('nav-open');
+            }
+        });
+
+        // Sticky Navbar
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if(window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // Intersection Observer (Scroll Fade-ins)
+        const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.observe-reveal').forEach(el => observer.observe(el));
+
+        // Timeline Scroll Progress
+        const timeline = document.getElementById('timeline');
+        const timelineProg = document.getElementById('timelineProg');
+
+        window.addEventListener('scroll', () => {
+            if(!timeline) return;
+            const rect = timeline.getBoundingClientRect();
+            const viewportH = window.innerHeight;
+            
+            // Start filling line when timeline top hits middle of viewport
+            if (rect.top < viewportH * 0.6 && rect.bottom > 0) {
+                const scrolledPast = (viewportH * 0.6) - rect.top;
+                const percent = (scrolledPast / rect.height) * 100;
+                timelineProg.style.height = `${Math.max(0, Math.min(percent, 100))}%`;
+            }
+        });
+    </script>
+</body>
+</html>
